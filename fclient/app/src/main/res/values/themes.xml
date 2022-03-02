@@ -13,6 +13,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    //Загрузили стиль
     <style name="PadButton">
         <item name="android:textColor" >#ecf0f1</item>
         <item name="android:layout_marginRight" >5dp</item>

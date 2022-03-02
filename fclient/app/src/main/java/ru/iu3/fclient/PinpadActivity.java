@@ -31,6 +31,7 @@ public class PinpadActivity extends AppCompatActivity {
             tvPin.setText("");
         });
     }
+    //Обработчики кнопок ввода цифр
     public void keyClick(View v)
     {
         String key = ((TextView)v).getText().toString();
