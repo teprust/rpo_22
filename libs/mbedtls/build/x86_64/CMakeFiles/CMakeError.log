@@ -1,0 +1,77 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/rustam/AndroidStudioProjects/libs/mbedtls/build/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_9b3b1/fast && /usr/bin/make  -f CMakeFiles/cmTC_9b3b1.dir/build.make CMakeFiles/cmTC_9b3b1.dir/build
+make[1]: вход в каталог «/home/rustam/AndroidStudioProjects/libs/mbedtls/build/x86_64/CMakeFiles/CMakeTmp»
+Building C object CMakeFiles/cmTC_9b3b1.dir/src.c.o
+/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --gcc-toolchain=/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Wextra -Wwrite-strings -Wpointer-arith -Wimplicit-fallthrough -Wshadow -Wvla -Wformat=2 -Wno-format-nonliteral -Werror -DCMAKE_HAVE_LIBC_PTHREAD -fPIE -o CMakeFiles/cmTC_9b3b1.dir/src.c.o -c /home/rustam/AndroidStudioProjects/libs/mbedtls/build/x86_64/CMakeFiles/CMakeTmp/src.c
+/home/rustam/AndroidStudioProjects/libs/mbedtls/build/x86_64/CMakeFiles/CMakeTmp/src.c:13:3: error: implicit declaration of function 'pthread_cancel' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+  pthread_cancel(thread);
+  ^
+/home/rustam/AndroidStudioProjects/libs/mbedtls/build/x86_64/CMakeFiles/CMakeTmp/src.c:13:3: note: did you mean 'pthread_once'?
+/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/pthread.h:275:5: note: 'pthread_once' declared here
+int pthread_once(pthread_once_t* __once, void (*__init_routine)(void));
+    ^
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_9b3b1.dir/build.make:85: CMakeFiles/cmTC_9b3b1.dir/src.c.o] Ошибка 1
+make[1]: выход из каталога «/home/rustam/AndroidStudioProjects/libs/mbedtls/build/x86_64/CMakeFiles/CMakeTmp»
+make: *** [Makefile:140: cmTC_9b3b1/fast] Ошибка 2
+
+
+Source file was:
+#include <pthread.h>
+
+void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/rustam/AndroidStudioProjects/libs/mbedtls/build/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_d5124/fast && /usr/bin/make  -f CMakeFiles/cmTC_d5124.dir/build.make CMakeFiles/cmTC_d5124.dir/build
+make[1]: вход в каталог «/home/rustam/AndroidStudioProjects/libs/mbedtls/build/x86_64/CMakeFiles/CMakeTmp»
+Building C object CMakeFiles/cmTC_d5124.dir/CheckFunctionExists.c.o
+/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --gcc-toolchain=/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Wextra -Wwrite-strings -Wpointer-arith -Wimplicit-fallthrough -Wshadow -Wvla -Wformat=2 -Wno-format-nonliteral -Werror -DCHECK_FUNCTION_EXISTS=pthread_create -fPIE -o CMakeFiles/cmTC_d5124.dir/CheckFunctionExists.c.o -c /home/rustam/Android/Sdk/cmake/3.18.1/share/cmake-3.18/Modules/CheckFunctionExists.c
+Linking C executable cmTC_d5124
+/home/rustam/Android/Sdk/cmake/3.18.1/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d5124.dir/link.txt --verbose=1
+/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --gcc-toolchain=/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Wextra -Wwrite-strings -Wpointer-arith -Wimplicit-fallthrough -Wshadow -Wvla -Wformat=2 -Wno-format-nonliteral -Werror -DCHECK_FUNCTION_EXISTS=pthread_create -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections   CMakeFiles/cmTC_d5124.dir/CheckFunctionExists.c.o -o cmTC_d5124  -lpthreads -latomic -lm 
+ld: error: unable to find library -lpthreads
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make[1]: *** [CMakeFiles/cmTC_d5124.dir/build.make:106: cmTC_d5124] Ошибка 1
+make[1]: выход из каталога «/home/rustam/AndroidStudioProjects/libs/mbedtls/build/x86_64/CMakeFiles/CMakeTmp»
+make: *** [Makefile:140: cmTC_d5124/fast] Ошибка 2
+
+
+
+Determining if the function pthread_create exists in the pthread failed with the following output:
+Change Dir: /home/rustam/AndroidStudioProjects/libs/mbedtls/build/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_afa6d/fast && /usr/bin/make  -f CMakeFiles/cmTC_afa6d.dir/build.make CMakeFiles/cmTC_afa6d.dir/build
+make[1]: вход в каталог «/home/rustam/AndroidStudioProjects/libs/mbedtls/build/x86_64/CMakeFiles/CMakeTmp»
+Building C object CMakeFiles/cmTC_afa6d.dir/CheckFunctionExists.c.o
+/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --gcc-toolchain=/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Wextra -Wwrite-strings -Wpointer-arith -Wimplicit-fallthrough -Wshadow -Wvla -Wformat=2 -Wno-format-nonliteral -Werror -DCHECK_FUNCTION_EXISTS=pthread_create -fPIE -o CMakeFiles/cmTC_afa6d.dir/CheckFunctionExists.c.o -c /home/rustam/Android/Sdk/cmake/3.18.1/share/cmake-3.18/Modules/CheckFunctionExists.c
+Linking C executable cmTC_afa6d
+/home/rustam/Android/Sdk/cmake/3.18.1/bin/cmake -E cmake_link_script CMakeFiles/cmTC_afa6d.dir/link.txt --verbose=1
+/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --gcc-toolchain=/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/rustam/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -Wall -Wextra -Wwrite-strings -Wpointer-arith -Wimplicit-fallthrough -Wshadow -Wvla -Wformat=2 -Wno-format-nonliteral -Werror -DCHECK_FUNCTION_EXISTS=pthread_create -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections   CMakeFiles/cmTC_afa6d.dir/CheckFunctionExists.c.o -o cmTC_afa6d  -lpthread -latomic -lm 
+ld: error: unable to find library -lpthread
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make[1]: *** [CMakeFiles/cmTC_afa6d.dir/build.make:106: cmTC_afa6d] Ошибка 1
+make[1]: выход из каталога «/home/rustam/AndroidStudioProjects/libs/mbedtls/build/x86_64/CMakeFiles/CMakeTmp»
+make: *** [Makefile:140: cmTC_afa6d/fast] Ошибка 2
+
+
+

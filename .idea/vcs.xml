@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/libs/mbedtls/mbedtls" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/libs/spdlog/spdlog" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/rpo_first_part" vcs="Git" />
+  </component>
+</project>
