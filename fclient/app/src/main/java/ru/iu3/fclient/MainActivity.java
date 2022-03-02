@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     public void onButtonClick(View v)
     {
         Intent it = new Intent(this, PinpadActivity.class);
-        //При StartActivity нет вывода сообщения. Используем  activityResultLauncher
+        //при StartActivity нет вывода сообщения. Используем  activityResultLauncher
         activityResultLauncher.launch(it);
         //startActivity(it);
         //Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show();
