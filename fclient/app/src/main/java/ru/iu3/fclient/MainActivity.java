@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -19,7 +20,9 @@ import org.apache.commons.codec.binary.Hex;
 import java.util.Random;
 import ru.iu3.fclient.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+
+
+public class MainActivity extends AppCompatActivity implements TransactionEvents {
 
     // Used to load the 'fclient' library on application startup.
     static {
@@ -42,6 +45,38 @@ public class MainActivity extends AppCompatActivity {
             hex = null;
         }
         return hex;
+    }
+    /*Обработчик transactionResult , будет вызываться из неуправляемого кода и передавать в
+    виртуальную машину результат операции. Вот подходящая реализация этого обработчика в классе
+    MainActivity.*/
+
+    @Override
+    public void transactionResult(boolean result) {
+        runOnUiThread(()-> {
+            Toast.makeText(MainActivity.this, result ? "ok" : "failed", Toast.LENGTH_SHORT);
+        });
+    }
+
+    private String pin;
+
+/*    Функция enterPin запускает форму для ввода ПИН-кода, передает ей счетчик попыток ввода и сумму,
+    и ожидает завершения ввода. Обработчик onActivityResult копирует значение ПИН-кода в поле pin,
+    если он введен. Это значение возвращается функцией enterPin обратно в код C++.*/
+    @Override
+    public String enterPin(int ptc, String amount) {
+        pin = new String();
+        Intent it = new Intent(MainActivity.this, PinpadActivity.class);
+        it.putExtra("ptc", ptc);
+        it.putExtra("amount", amount);
+        synchronized (MainActivity.this) {
+            activityResultLauncher.launch(it);
+            try {
+                MainActivity.this.wait();
+            } catch (Exception ex) {
+                //todo: log error
+            }
+        }
+        return pin;
     }
 
     @Override
@@ -70,26 +105,34 @@ public class MainActivity extends AppCompatActivity {
         //TextView tv = findViewById(R.id.sample_text);
         //tv.setText(stringFromJNI());
 
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+        activityResultLauncher
+                = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             Intent data = result.getData();
-                            // обработка результата
-                            String pin = data.getStringExtra("pin");
-                            Toast.makeText(MainActivity.this, pin, Toast.LENGTH_SHORT).show();
+                        // обработка результата
+                        //String pin = data.getStringExtra("pin");
+                        //Toast.makeText(MainActivity.this, pin, Toast.LENGTH_SHORT);
+                            pin = data.getStringExtra("pin");
+                            synchronized (MainActivity.this) {
+                               MainActivity.this.notifyAll();
+                            }
                         }
                     }
                 });
+
     }
 
 
     public void onButtonClick(View v)
     {
-        Intent it = new Intent(this, PinpadActivity.class);
+        //Intent it = new Intent(this, PinpadActivity.class);
         //при StartActivity нет вывода сообщения. Используем  activityResultLauncher
-        activityResultLauncher.launch(it);
+        //activityResultLauncher.launch(it);
+
         //startActivity(it);
         //Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show();
         //byte[] key =
@@ -99,12 +142,23 @@ public class MainActivity extends AppCompatActivity {
         //byte[] dec = decrypt(key, enc);
         //String s = new String(Hex.encodeHex(dec)).toUpperCase();
         //Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+
+        new Thread(()-> {
+            try {
+                byte[] trd = stringToHex("9F0206000000000100");
+                transaction(trd);
+
+            } catch (Exception ex) {
+            // todo: log error
+            }
+        }).start();
     }
     /**
      * A native method that is implemented by the 'fclient' native library,
      * which is packaged with this application.
      */
     public native String stringFromJNI();
+    public native boolean transaction(byte[] trd);
     public static native int initRng();
     public static native byte[] randomBytes(int no);
     public static native byte[] encrypt(byte[] key, byte[] data);
