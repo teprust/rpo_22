@@ -190,16 +190,16 @@ public class MainActivity extends AppCompatActivity implements TransactionEvents
         //String s = new String(Hex.encodeHex(dec)).toUpperCase();
         //Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
 
-        new Thread(()-> {
-            try {
+        //new Thread(()-> {
+        //    try {
                 byte[] trd = stringToHex("9F0206000000000100");
                 //transaction(trd);
                 testHttpClient();
 
-            } catch (Exception ex) {
+         //   } catch (Exception ex) {
             // todo: log error
-            }
-        }).start();
+         //   }
+        //}).start();
     }
 
     /**
