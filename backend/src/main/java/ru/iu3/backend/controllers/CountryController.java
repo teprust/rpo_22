@@ -5,18 +5,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import ru.iu3.backend.models.Artist;
 import ru.iu3.backend.models.Country;
 import ru.iu3.backend.repositories.CountryRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1")
 
 public class CountryController {
+    //Ссылка на объект, содержащий базовые функции, описаннные в репозитории
     @Autowired
     CountryRepository countryRepository;
 
@@ -32,7 +31,7 @@ public class CountryController {
     }
 
     //Метод для добавления страны с проверкой на уникальность данных
-
+    // ResponseEntity возвращает типы ошибок
     @PostMapping("/countries")
     public ResponseEntity<Object> createCountry(@RequestBody Country country)
             throws Exception {
@@ -43,7 +42,7 @@ public class CountryController {
         catch(Exception ex) {
             String error;
             if (ex.getMessage().contains("countries.name_UNIQUE"))
-                error = "countyalreadyexists";
+                error = "countryalreadyexists";
             else
                 error = "undefinederror";
             Map<String, String>
@@ -52,6 +51,15 @@ public class CountryController {
             return ResponseEntity.ok(map);
             //return new ResponseEntity<Object> (map, HttpStatus.OK);
         }
+    }
+    //Список художников данной страны
+    @GetMapping("/countries/{id}/artists")
+    public ResponseEntity<List<Artist>> getCountryArtists(@PathVariable(value = "id") Long countryID){
+            Optional<Country> cc = countryRepository.findById(countryID);
+            if (cc.isPresent()) {
+            return ResponseEntity.ok(cc.get().artists);
+            }
+            return ResponseEntity.ok(new ArrayList<Artist>());
     }
 
     //Проверка опечаток в названии страны
@@ -73,7 +81,7 @@ public class CountryController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "country not found");
         }
     }
-    /*Заметьте, что мы не передаем id в JSON редактируемой страны. Обработчик берет его не из объекта County а
+    /*Заметьте, что мы не передаем id в JSON редактируемой страны. Обработчик берет его не из объекта Country а
         из @PathVariable. Обратите внимание на разные способы передачи аргументов обработчикам запросов. Это
         может быть тело POST запроса (@RequestBody), элемент пути из URL (@PathVariable) или раздел аргументов
         в строке URL ( такого примера у нас пока не было).*/

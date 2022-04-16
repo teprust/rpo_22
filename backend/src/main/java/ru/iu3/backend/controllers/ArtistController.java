@@ -6,8 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.iu3.backend.models.Artist;
+import ru.iu3.backend.models.Country;
 import ru.iu3.backend.repositories.ArtistRepository;
+import ru.iu3.backend.repositories.CountryRepository;
 
+import java.security.cert.Extension;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +22,8 @@ import java.util.Optional;
 public class ArtistController {
     @Autowired
     ArtistRepository artistRepository;
-
+    @Autowired
+    CountryRepository countryRepository;
     /* Метод getAllCountries возвращает список художников,
    который будет автоматически преобразован в JSON.
    Заметим, что мы не делали сами реализацию метода
@@ -27,21 +31,28 @@ public class ArtistController {
 
     @GetMapping("/artists")
     public List
-    getAllArtists() {  return artistRepository.findAll(); }
+    getAllArtists() {
+        return artistRepository.findAll();
+    }
 
     //Метод для добавления страны с проверкой на уникальность данных
 
     @PostMapping("/artists")
-    public ResponseEntity<Object> createArtist(@RequestBody Artist artist)
+    public ResponseEntity<Object> createArtist(@RequestBody Artist artists)
             throws Exception {
         try {
-            Artist na = artistRepository.save(artist);
-            return new ResponseEntity<Object>(na, HttpStatus.OK);
-        }
-        catch(Exception ex) {
+            // Извлекаем самостоятельно страну из пришедших данных
+            Optional<Country> cc = countryRepository.findById(artists.countryid.id);
+            if (cc.isPresent()) {
+                artists.countryid = cc.get();
+            }
+            // Формируем новый объект класса Artists и сохраняем его в репозиторий
+            Artist nc = artistRepository.save(artists);
+            return new ResponseEntity<Object>(nc, HttpStatus.OK);
+        } catch (Exception ex) {
             String error;
             if (ex.getMessage().contains("artists.name_UNIQUE"))
-                error = "countyalreadyexists";
+                error = "artistalreadyexists";
             else
                 error = "undefinederror";
             Map<String, String>
@@ -58,13 +69,16 @@ public class ArtistController {
 
     @PutMapping("/artists/{id}")
     public ResponseEntity<Artist> updateArtist(@PathVariable(value = "id") Long artistId,
-                                                 @RequestBody Artist artistDetails) {
+                                               @RequestBody Artist artistDetails) {
         Artist artist = null;
         Optional<Artist>
                 cc = artistRepository.findById(artistId);
         if (cc.isPresent()) {
             artist = cc.get();
+            //Обновление информации
             artist.name = artistDetails.name;
+            artist.age = artistDetails.age;
+            artist.countryid = artistDetails.countryid;
             artistRepository.save(artist);
             return ResponseEntity.ok(artist);
         } else {
@@ -79,15 +93,16 @@ public class ArtistController {
 
     //Метод удаления записи из таблицы artists
     @DeleteMapping("/artists/{id}")
-    public ResponseEntity<Object> deleteArtist(@PathVariable(value = "id") Long artistId){
+    public ResponseEntity<Object> deleteArtist(@PathVariable(value = "id") Long artistId) {
         Optional<Artist> artist = artistRepository.findById(artistId);
         Map<String, Boolean> resp = new HashMap<>();
         if (artist.isPresent()) {
             artistRepository.delete(artist.get());
             resp.put("deleted", Boolean.TRUE);
-        }
-        else
+        } else
             resp.put("deleted", Boolean.FALSE);
         return ResponseEntity.ok(resp);
     }
+
+
 }
