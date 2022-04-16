@@ -41,10 +41,12 @@ public class User {
     @Column(name = "salt")
     public String salt;
 
-    @JsonIgnore
+    //@JsonIgnore
     @Column(name = "token")
     public String token;
 
+    // Здесь будет храниться время, когда мы последний раз видели
+    // пользователя
     @Column(name = "activity")
     public LocalDateTime activity;
 

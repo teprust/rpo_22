@@ -24,7 +24,9 @@ public class Painting{
     @Column(name = "name", nullable = false)
     public String name;
     @Column(name = "artistid")
+    @ManyToOne
     public Long artistid;
+    @ManyToOne
     @Column(name = "museumid")
     public Long museumid;
     @Column(name = "year")

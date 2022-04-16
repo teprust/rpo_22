@@ -42,7 +42,7 @@ public class PaintingController {
         catch(Exception ex) {
             String error;
             if (ex.getMessage().contains("paintings.name_UNIQUE"))
-                error = "countyalreadyexists";
+                error = "paintalreadyexists";
             else
                 error = "undefinederror";
             Map<String, String>
@@ -66,6 +66,10 @@ public class PaintingController {
         if (cc.isPresent()) {
             painting = cc.get();
             painting.name = paintingDetails.name;
+            painting.museumid = paintingDetails.museumid;
+            painting.artistid = paintingDetails.artistid;
+            painting.year = paintingDetails.year;
+
             paintingRepository.save(painting);
             return ResponseEntity.ok(painting);
         } else {
