@@ -21,14 +21,18 @@ public class Painting{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     public Long id;
+
     @Column(name = "name", nullable = false)
     public String name;
-    @Column(name = "artistid")
+
     @ManyToOne
-    public Long artistid;
+    @JoinColumn(name = "artistid")
+    public Artist artistid;
     @ManyToOne
-    @Column(name = "museumid")
-    public Long museumid;
+
+    @JoinColumn(name = "museumid")
+    public Museum museumid;
+
     @Column(name = "year")
     public String year;
 }
