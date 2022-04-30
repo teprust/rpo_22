@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Router, Route } from "react-router";
 import '/home/rustam/AndroidStudioProjects/backend/front/src/App.css';
 import Home from "/home/rustam/AndroidStudioProjects/backend/front/src/components/Home";
+import Login from "/home/rustam/AndroidStudioProjects/backend/front/src/components/Login";
 import Another_home from "/home/rustam/AndroidStudioProjects/backend/front/src/components/Another_home";
 import NavigationBar from "/home/rustam/AndroidStudioProjects/backend/front/src/components/NavigationBarClass";
 
@@ -18,7 +19,11 @@ function App() {
 					<Routes>
 						<Route path="home" element={<Home />}/>
 						{         }
-						<Route path="Another_Home" element={<Another_home />} />
+						<Route path="login" element={<Login />} />
+						{         }
+						<Route path="another_Home" element={<Another_home />} />
+						{         }
+		
 					</Routes>
 				</div>
 			</BrowserRouter>

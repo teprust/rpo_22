@@ -32,7 +32,12 @@ import java.util.UUID;
     раз при обращении к REST сервису. Этот токен проверяется в процедуре attemptAuthentication нашего
     фильтра запросов, как вы помните.
  */
+/*
+* Браузер загружает скрипт с сервера localhost:3000, в котором содержится вызов REST API сервера localhost:8081. Когда скрипт делает этот вызов, в запрос
+добавляется заголовок Origin, в котором указывается, что источник запроса сервер localhost:3000. Ответ серверу 3000 должен быть явно разрешен в настройках
+сервера 8081.*/
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/auth")
 public class LoginController {
