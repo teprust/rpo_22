@@ -2,7 +2,7 @@ import Utils from "./Utils";
 
 import {applyMiddleware, combineReducers, createStore} from "redux";
 import {createLogger} from "redux-logger"
-
+import axios from "axios";
 
 
 
@@ -39,6 +39,7 @@ function authentication(state = initialState, action) {
 			return state
 	}
 }
+//----------------------------------------------------
 
 
 //-----------------------------------------------
