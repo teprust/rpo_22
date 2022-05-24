@@ -50,6 +50,9 @@ public class User {
     @Column(name = "activity")
     public LocalDateTime activity;
 
+    @Transient
+    public String np;
+
 //    Для типа List, именно в этом случае, JPA генерирует очень неэффективный код
 //    запросов к базе данных. Используете всегда Set для отношений многие-ко-многим.
     @ManyToMany(mappedBy = "users")

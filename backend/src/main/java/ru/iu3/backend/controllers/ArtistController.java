@@ -1,6 +1,9 @@
 package ru.iu3.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,13 +12,16 @@ import ru.iu3.backend.models.Artist;
 import ru.iu3.backend.models.Country;
 import ru.iu3.backend.repositories.ArtistRepository;
 import ru.iu3.backend.repositories.CountryRepository;
+import ru.iu3.backend.tools.DataValidationException;
 
+import javax.validation.Valid;
 import java.security.cert.Extension;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
 
@@ -30,9 +36,8 @@ public class ArtistController {
    findAll. Она уже есть в реализации интерфейса ArtistRepository.*/
 
     @GetMapping("/artists")
-    public List
-    getAllArtists() {
-        return artistRepository.findAll();
+    public Page getAllArtists(@RequestParam("page") int page, @RequestParam("limit") int limit) {
+        return artistRepository.findAll(PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "name")));
     }
 
     //Метод для добавления страны с проверкой на уникальность данных
@@ -67,6 +72,15 @@ public class ArtistController {
     /*Здесь обработка ошибки сводится к тому, что мы возвращаем код 404 на запрос в случае, если страна с
     указанным ключом отсутствует.*/
 
+    @GetMapping("/artists/{id}")
+    public ResponseEntity getArtist(@PathVariable(value = "id") Long artistId)
+            throws DataValidationException
+    {
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(()-> new DataValidationException("Художник с таким индексом не найден"));
+        return ResponseEntity.ok(artist);
+    }
+
     @PutMapping("/artists/{id}")
     public ResponseEntity<Artist> updateArtist(@PathVariable(value = "id") Long artistId,
                                                @RequestBody Artist artistDetails) {
@@ -92,17 +106,10 @@ public class ArtistController {
 
 
     //Метод удаления записи из таблицы artists
-    @DeleteMapping("/artists/{id}")
-    public ResponseEntity<Object> deleteArtist(@PathVariable(value = "id") Long artistId) {
-        Optional<Artist> artist = artistRepository.findById(artistId);
-        Map<String, Boolean> resp = new HashMap<>();
-        if (artist.isPresent()) {
-            artistRepository.delete(artist.get());
-            resp.put("deleted", Boolean.TRUE);
-        } else
-            resp.put("deleted", Boolean.FALSE);
-        return ResponseEntity.ok(resp);
+    @PostMapping("/deleteartists")
+    public ResponseEntity deleteArtists(@Valid @RequestBody List artists) {
+        artistRepository.deleteAll(artists);
+        return new ResponseEntity(HttpStatus.OK);
     }
-
 
 }
